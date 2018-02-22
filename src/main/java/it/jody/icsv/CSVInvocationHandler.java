@@ -24,11 +24,15 @@ public class CSVInvocationHandler implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
         CSVField annotation = method.getAnnotation(CSVField.class);
+        if ("getMarkerName".equals(method.getName())) {
+            return array[0];
+        }
+
         if (annotation == null) {
             return method.invoke(args);
-        } else {
-            int idx = annotation.idx();
-            return array[idx];
         }
+
+        int idx = annotation.idx();
+        return array[idx];
     }
 }
