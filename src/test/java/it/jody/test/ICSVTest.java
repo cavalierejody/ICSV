@@ -2,14 +2,15 @@ package it.jody.test;
 
 import it.jody.icsv.CSVBeanBuilder;
 import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Created by Jody on 20/02/2018.
  */
 
-public class Test {
+public class ICSVTest {
 
-    @org.junit.Test
+    @Test
     public void testPlainCSVtoBean() {
 
         String[] arr = {"Mario Rossi", "25"};
@@ -19,7 +20,7 @@ public class Test {
         Assert.assertEquals("25", personPlain.getAge());
     }
 
-    @org.junit.Test
+    @Test
     public void testCSVToBean() {
 
         String[] arr = {"PER", "Mario Rossi", "25"};
