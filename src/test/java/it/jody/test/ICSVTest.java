@@ -14,7 +14,7 @@ public class ICSVTest {
     public void testPlainCSVtoBean() {
 
         String[] arr = {"Mario Rossi", "25"};
-        PersonPlain personPlain = (PersonPlain) new CSVBeanBuilder().build(PersonPlain.class, arr);
+        PersonPlain personPlain = new CSVBeanBuilder().build(PersonPlain.class, arr);
 
         Assert.assertEquals("Mario Rossi", personPlain.getName());
         Assert.assertEquals("25", personPlain.getAge());

@@ -18,14 +18,16 @@ public class CSVBeanBuilder {
      * @param array
      * @return
      */
-    public Object build(Class type, Object[] array) {
+    public <T> T build(Class<T> type, Object[] array) {
 
         withManagedType(type);
 
-        return Proxy.newProxyInstance(
-                CSVBeanBuilder.class.getClassLoader(),
-                new Class[] { type },
-                new CSVInvocationHandler(array)
+        return type.cast(
+                Proxy.newProxyInstance(
+                        CSVBeanBuilder.class.getClassLoader(),
+                        new Class[] { type },
+                        new CSVInvocationHandler(array)
+                )
         );
     }
 
