@@ -1,5 +1,7 @@
 package it.jody.icsv;
 
+import it.jody.icsv.exceptions.PrimitiveTypeNotSupportedException;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -8,6 +10,8 @@ import java.util.List;
  * Created by Jody on 20/02/2018.
  */
 public class CSVInvocationHandler implements InvocationHandler {
+
+    private final StringMarshallerController marshallerController = new StringMarshallerController();
 
     private final Object[] array;
 
@@ -32,7 +36,11 @@ public class CSVInvocationHandler implements InvocationHandler {
             return method.invoke(args);
         }
 
+        if (method.getReturnType().isPrimitive()) {
+            throw new PrimitiveTypeNotSupportedException(method);
+        }
+
         int idx = annotation.idx();
-        return array[idx];
+        return marshallerController.getMarshaller(method.getReturnType()).fromString((String) array[idx]);
     }
 }

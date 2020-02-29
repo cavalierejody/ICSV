@@ -14,5 +14,5 @@ public interface Person extends CSVDeclaredType {
     String getName();
 
     @CSVField(idx = 2)
-    String getAge();
+    Integer getAge();
 }

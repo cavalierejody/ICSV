@@ -1,5 +1,8 @@
 package it.jody.icsv;
 
+import it.jody.icsv.exceptions.ManagedTypeException;
+import it.jody.icsv.exceptions.MissingMarkerNameException;
+
 import java.lang.reflect.Proxy;
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,17 +18,18 @@ public class CSVBeanBuilder {
      * Return bean instance for an array.
      * It can be used both with managed types and unmaged types of aarray.
      * If array type is managed, then the managed types library will be updated.
+     *
      * @param array
      * @return
      */
-    public <T> T build(Class<T> type, Object[] array) {
+    public <T> T build(Class<T> type, Object[] array) throws MissingMarkerNameException {
 
         withManagedType(type);
 
         return type.cast(
                 Proxy.newProxyInstance(
                         CSVBeanBuilder.class.getClassLoader(),
-                        new Class[] { type },
+                        new Class[]{type},
                         new CSVInvocationHandler(array)
                 )
         );
@@ -34,16 +38,17 @@ public class CSVBeanBuilder {
     /**
      * Return bean instance for an array with a managed type already loaded.
      * It cannot be used with unmanaged tyupes of array.
+     *
      * @param array
      * @return
      */
-    public Object build(Object[] array) {
+    public Object build(Object[] array) throws ManagedTypeException, MissingMarkerNameException {
 
         String typeMarker = String.valueOf(array[0]);
         Class aClass = managedTypes.get(typeMarker);
 
         if (aClass == null) {
-            throw new RuntimeException("unmanaged type of array");
+            throw new ManagedTypeException();
         } else {
             return build(aClass, array);
         }
@@ -51,15 +56,16 @@ public class CSVBeanBuilder {
 
     /**
      * Register a type Class for Bean conversion based on the marker attribute.
+     *
      * @param type
      * @return
      */
-    public CSVBeanBuilder withManagedType(Class type) {
+    public CSVBeanBuilder withManagedType(Class type) throws MissingMarkerNameException {
 
         CSVType csvType = (CSVType) type.getAnnotation(CSVType.class);
         if (csvType != null) {
             if (csvType.markerName().isEmpty()) {
-                throw new RuntimeException("missing markerName annotation");
+                throw new MissingMarkerNameException();
             } else {
                 String key = csvType.markerName();
                 managedTypes.put(key, type);
@@ -72,10 +78,11 @@ public class CSVBeanBuilder {
     /**
      * Register multiple types for Bean conversion based on the marker attribute.
      * It calls method {@link #withManagedType(java.lang.Class)}
+     *
      * @param types
      * @return
      */
-    public CSVBeanBuilder withManagedTypes(Collection<Class> types) {
+    public CSVBeanBuilder withManagedTypes(Class... types) throws MissingMarkerNameException {
 
         for (Class type : types) {
             withManagedType(type);
