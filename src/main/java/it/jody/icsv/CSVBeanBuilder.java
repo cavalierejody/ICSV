@@ -12,7 +12,7 @@ import java.util.HashMap;
  */
 public class CSVBeanBuilder {
 
-    private HashMap<String, Class> managedTypes = new HashMap<String, Class>();
+    private final HashMap<String, Class> managedTypes = new HashMap<String, Class>();
 
     /**
      * Return bean instance for an array.

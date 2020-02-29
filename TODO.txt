@@ -6,3 +6,5 @@
 - check coverage (Jacoco?)
 - divide integration and unit test in different packages
 - add Google Formatting
+- test exceptions
+- check accessor types
