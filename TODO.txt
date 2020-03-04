@@ -8,3 +8,4 @@
 - add Google Formatting
 - test exceptions
 - check accessor types
+- full file processor with return of lazy stream
