@@ -7,7 +7,7 @@ import it.jody.icsv.CSVField;
 /**
  * Created by Jody on 22/02/2018.
  */
-@CSVType(markerName = "PER", size = 3)
+@CSVType(markerName = "PER", size = 4)
 public interface Person extends CSVDeclaredType {
 
     @CSVField(idx = 1)
@@ -15,4 +15,7 @@ public interface Person extends CSVDeclaredType {
 
     @CSVField(idx = 2)
     Integer getAge();
+
+    @CSVField(idx = 3)
+    Double getSalary();
 }

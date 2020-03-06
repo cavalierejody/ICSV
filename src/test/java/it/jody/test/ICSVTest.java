@@ -25,12 +25,13 @@ public class ICSVTest {
     @Test
     public void testCSVToBean() throws ManagedTypeException, MissingMarkerNameException {
 
-        String[] arr = {"PER", "Mario Rossi", "25"};
+        String[] arr = {"PER", "Mario Rossi", "25", "35000d"};
         CSVBeanBuilder csvBeanBuilder = new CSVBeanBuilder().withManagedType(Person.class);
         Person person = (Person) csvBeanBuilder.build(arr);
 
         Assert.assertEquals("PER", person.getMarkerName());
         Assert.assertEquals("Mario Rossi", person.getName());
         Assert.assertEquals(Integer.valueOf(25), person.getAge());
+        Assert.assertEquals(Double.valueOf(35000), person.getSalary());
     }
 }

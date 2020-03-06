@@ -14,6 +14,7 @@ public class StringMarshallerController {
         addMarshaller(Integer.class, new IntegerMarshaller());
         addMarshaller(Float.class, new FloatMarshaller());
         addMarshaller(Long.class, new LongMarshaller());
+        addMarshaller(Double.class, new DoubleMarshaller());
     }
 
     public void addMarshaller(Class<?> aClass, StringMarshaller<?> aMarshaller) {
@@ -73,6 +74,19 @@ public class StringMarshallerController {
         @Override
         public Long fromString(String value) {
             return Long.parseLong(value);
+        }
+    }
+
+    private class DoubleMarshaller implements StringMarshaller<Double>{
+
+        @Override
+        public String toString(Double value) {
+            return Objects.toString(value, nullDefault);
+        }
+
+        @Override
+        public Double fromString(String value) {
+            return Double.parseDouble(value);
         }
     }
 }
