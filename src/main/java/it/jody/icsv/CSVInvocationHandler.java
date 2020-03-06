@@ -21,8 +21,8 @@ public class CSVInvocationHandler implements InvocationHandler {
         array = arr;
     }
 
-    public CSVInvocationHandler(Object[] array) {
-        this.array = array;
+    public CSVInvocationHandler(Object... values) {
+        this.array = values;
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {

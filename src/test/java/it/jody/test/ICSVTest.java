@@ -1,6 +1,6 @@
 package it.jody.test;
 
-import it.jody.icsv.CSVBeanBuilder;
+import it.jody.icsv.CSVBeanHandler;
 import it.jody.icsv.exceptions.ManagedTypeException;
 import it.jody.icsv.exceptions.MissingMarkerNameException;
 import org.junit.Assert;
@@ -16,7 +16,7 @@ public class ICSVTest {
     public void testPlainCSVtoBean() throws MissingMarkerNameException {
 
         String[] arr = {"Mario Rossi", "25"};
-        PersonPlain personPlain = new CSVBeanBuilder().build(PersonPlain.class, arr);
+        PersonPlain personPlain = new CSVBeanHandler().toBean(PersonPlain.class, arr);
 
         Assert.assertEquals("Mario Rossi", personPlain.getName());
         Assert.assertEquals("25", personPlain.getAge());
@@ -26,8 +26,8 @@ public class ICSVTest {
     public void testCSVToBean() throws ManagedTypeException, MissingMarkerNameException {
 
         String[] arr = {"PER", "Mario Rossi", "25", "35000d"};
-        CSVBeanBuilder csvBeanBuilder = new CSVBeanBuilder().withManagedType(Person.class);
-        Person person = (Person) csvBeanBuilder.build(arr);
+        CSVBeanHandler csvBeanHandler = new CSVBeanHandler().withManagedType(Person.class);
+        Person person = (Person) csvBeanHandler.toBean(arr);
 
         Assert.assertEquals("PER", person.getMarkerName());
         Assert.assertEquals("Mario Rossi", person.getName());
