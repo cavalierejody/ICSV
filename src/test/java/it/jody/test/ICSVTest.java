@@ -34,4 +34,19 @@ public class ICSVTest {
         Assert.assertEquals(Integer.valueOf(25), person.getAge());
         Assert.assertEquals(Double.valueOf(35000), person.getSalary());
     }
+
+    @Test
+    public void testWriter() throws MissingMarkerNameException, ManagedTypeException {
+
+        CSVBeanHandler csvBeanHandler = new CSVBeanHandler();
+        Person person = csvBeanHandler.toBean(Person.class);
+
+        person.setName("Mario Rossi");
+        Assert.assertEquals("Mario Rossi", person.getName());
+
+        person.setName("Giovanni Bianchi");
+        Assert.assertEquals("Giovanni Bianchi", person.getName());
+
+        Assert.assertEquals("PER;Giovanni Bianchi;null;null", person.toCsvString());
+    }
 }

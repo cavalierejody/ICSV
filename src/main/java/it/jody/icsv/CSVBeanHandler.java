@@ -70,6 +70,27 @@ public class CSVBeanHandler {
         );
     }
 
+    public <T> T toBean(Class<T> type) throws MissingMarkerNameException {
+
+        CSVType csvType = type.getAnnotation(CSVType.class);
+        int size = csvType.size();
+        Object[] array = new Object[size];
+        String markerName = csvType.markerName();
+        if (markerName != null && !markerName.isEmpty()) {
+            array[0] = markerName;
+        }
+
+        withManagedType(type);
+
+        return type.cast(
+                Proxy.newProxyInstance(
+                        CSVBeanHandler.class.getClassLoader(),
+                        new Class[]{type},
+                        new CSVInvocationHandler(array)
+                )
+        );
+    }
+
     /**
      * Return bean instance for an array with a managed type already loaded.
      * It cannot be used with unmanaged tyupes of array.
@@ -88,4 +109,15 @@ public class CSVBeanHandler {
             return toBean(aClass, array);
         }
     }
+
+    public Object[] toArray(CSVDeclaredType bean) {
+        CSVType csvType = bean.getClass().getAnnotation(CSVType.class);
+        throw new UnsupportedOperationException();
+    }
+
+    public Object[] toArray(Object bean) {
+        throw new UnsupportedOperationException();
+    }
+
+
 }
