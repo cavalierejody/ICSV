@@ -51,22 +51,48 @@ public class CSVInvocationHandler implements InvocationHandler {
 
         // getter method
         if (isGetterMethod(method)) {
+            Class<?> returnType = method.getReturnType();
+
             // return type primitive -> not Supported
-            if (method.getReturnType().isPrimitive()) {
+            if (returnType.isPrimitive()) {
                 throw new PrimitiveTypeNotSupportedException(method);
             }
-            StringMarshaller marshaller = marshallerController.getMarshaller(method.getReturnType());
+
+            StringMarshaller marshaller = getStringMarshaller(annotation, returnType);
             return marshaller.fromString((String) array[idx]);
         }
 
         if (isSetterMethod(method)) {
-            StringMarshaller marshaller = marshallerController.getMarshaller(method.getParameterTypes()[0]);
+
+            Class<?> parameterType = method.getParameterTypes()[0];
+
+            // return type primitive -> not Supported
+            if (parameterType.isPrimitive()) {
+                throw new PrimitiveTypeNotSupportedException(method);
+            }
+
+            StringMarshaller marshaller = getStringMarshaller(annotation, parameterType);
             String value = marshaller.toString(args[0]);
             array[idx] = value;
             return null;
         }
 
         throw new IllegalStateException();
+    }
+
+    private StringMarshaller getStringMarshaller(CSVField annotation, Class<?> type) throws InstantiationException, IllegalAccessException {
+        Class<? extends StringMarshaller> marshallerClass = annotation.marshaller();
+        StringMarshaller marshaller;
+        if (marshallerClass.getSuperclass() == null) {
+            marshaller = marshallerController.getMarshaller(type);
+        } else {
+            try {
+                marshaller = marshallerClass.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException("No default contructor found for marshaller " + marshallerClass.getName(), e);
+            }
+        }
+        return marshaller;
     }
 
     private boolean isSetterMethod(Method method) {

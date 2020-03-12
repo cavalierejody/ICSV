@@ -1,7 +1,7 @@
 - better readable exceptions
 - more default StringMarshallers
-    - manage date with format
-- add extensible StringMarshaller
+    - manage default date
+    - manage date with formats
 - check coverage (Jacoco?)
 - divide integration and unit test in different packages
 - add Google Formatting

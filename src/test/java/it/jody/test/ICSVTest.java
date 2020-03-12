@@ -18,7 +18,7 @@ public class ICSVTest {
         String[] arr = {"Mario Rossi", "25"};
         PersonPlain personPlain = new CSVBeanHandler().toBean(PersonPlain.class, arr);
 
-        Assert.assertEquals("Mario Rossi", personPlain.getName());
+        Assert.assertEquals("MARIO ROSSI", personPlain.getName());
         Assert.assertEquals("25", personPlain.getAge());
     }
 
