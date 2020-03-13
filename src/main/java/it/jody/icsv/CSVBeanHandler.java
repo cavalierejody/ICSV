@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class CSVBeanHandler {
 
-    private final HashMap<String, Class> managedTypes = new HashMap<String, Class>();
+    private final HashMap<String, Class> managedTypes = new HashMap();
 
     /**
      * Register a type Class for Bean conversion based on the marker attribute.
@@ -109,15 +109,4 @@ public class CSVBeanHandler {
             return toBean(aClass, array);
         }
     }
-
-    public Object[] toArray(CSVDeclaredType bean) {
-        CSVType csvType = bean.getClass().getAnnotation(CSVType.class);
-        throw new UnsupportedOperationException();
-    }
-
-    public Object[] toArray(Object bean) {
-        throw new UnsupportedOperationException();
-    }
-
-
 }

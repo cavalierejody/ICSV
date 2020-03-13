@@ -1,13 +1,18 @@
 package it.jody.icsv;
 
+import it.jody.icsv.exceptions.DateFormatException;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 public class StringMarshallerController {
 
-    private final Map<Class, StringMarshaller> marshallerMap = new HashMap<Class, StringMarshaller>();
-    private final String nullDefault = null;
+    private static final String NULL_DEFAULT = null;
+    private final Map<Class, StringMarshaller> marshallerMap = new HashMap();
 
     public StringMarshallerController() {
         addMarshaller(String.class, new StringDefaultMarshaller());
@@ -15,6 +20,7 @@ public class StringMarshallerController {
         addMarshaller(Float.class, new FloatMarshaller());
         addMarshaller(Long.class, new LongMarshaller());
         addMarshaller(Double.class, new DoubleMarshaller());
+        addMarshaller(Date.class, new DateMarshaller());
     }
 
     public void addMarshaller(Class<?> aClass, StringMarshaller<?> aMarshaller) {
@@ -29,7 +35,7 @@ public class StringMarshallerController {
 
         @Override
         public String toString(String value) {
-            return Objects.toString(value, nullDefault);
+            return Objects.toString(value, NULL_DEFAULT);
         }
 
         @Override
@@ -42,7 +48,7 @@ public class StringMarshallerController {
 
         @Override
         public String toString(Integer value) {
-            return Objects.toString(value, nullDefault);
+            return Objects.toString(value, NULL_DEFAULT);
         }
 
         @Override
@@ -55,7 +61,7 @@ public class StringMarshallerController {
 
         @Override
         public String toString(Float value) {
-            return Objects.toString(value, nullDefault);
+            return Objects.toString(value, NULL_DEFAULT);
         }
 
         @Override
@@ -68,7 +74,7 @@ public class StringMarshallerController {
 
         @Override
         public String toString(Long value) {
-            return Objects.toString(value, nullDefault);
+            return Objects.toString(value, NULL_DEFAULT);
         }
 
         @Override
@@ -81,12 +87,31 @@ public class StringMarshallerController {
 
         @Override
         public String toString(Double value) {
-            return Objects.toString(value, nullDefault);
+            return Objects.toString(value, NULL_DEFAULT);
         }
 
         @Override
         public Double fromString(String value) {
             return Double.parseDouble(value);
+        }
+    }
+
+    private class DateMarshaller implements StringMarshaller<Date> {
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+
+        @Override
+        public String toString(Date value) {
+            return formatter.format(value);
+        }
+
+        @Override
+        public Date fromString(String value) {
+            try {
+                return formatter.parse(value);
+            } catch (ParseException e) {
+                throw new DateFormatException(e);
+            }
         }
     }
 }

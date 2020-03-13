@@ -1,8 +1,10 @@
 package it.jody.icsv;
 
+import it.jody.icsv.exceptions.NoDefaultConstructorFound;
 import it.jody.icsv.exceptions.PrimitiveTypeNotSupportedException;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -80,16 +82,16 @@ public class CSVInvocationHandler implements InvocationHandler {
         throw new IllegalStateException();
     }
 
-    private StringMarshaller getStringMarshaller(CSVField annotation, Class<?> type) throws InstantiationException, IllegalAccessException {
+    private StringMarshaller getStringMarshaller(CSVField annotation, Class<?> type) throws NoDefaultConstructorFound {
         Class<? extends StringMarshaller> marshallerClass = annotation.marshaller();
         StringMarshaller marshaller;
         if (marshallerClass.getSuperclass() == null) {
             marshaller = marshallerController.getMarshaller(type);
         } else {
             try {
-                marshaller = marshallerClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException("No default contructor found for marshaller " + marshallerClass.getName(), e);
+                marshaller = marshallerClass.getDeclaredConstructor().newInstance();
+            } catch (NoSuchMethodException | InvocationTargetException | InstantiationException | IllegalAccessException e) {
+                throw new NoDefaultConstructorFound("No default contructor found for marshaller " + marshallerClass.getName(), e);
             }
         }
         return marshaller;
