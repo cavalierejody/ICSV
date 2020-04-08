@@ -6,6 +6,9 @@ import it.jody.icsv.exceptions.MissingMarkerNameException;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 /**
  * Created by Jody on 20/02/2018.
  */
@@ -15,11 +18,12 @@ public class ICSVTest {
     @Test
     public void testPlainCSVtoBean() throws MissingMarkerNameException {
 
-        String[] arr = {"Mario Rossi", "25"};
+        String[] arr = {"Mario Rossi", "25", "20200101"};
         PersonPlain personPlain = new CSVBeanHandler().toBean(PersonPlain.class, arr);
 
         Assert.assertEquals("MARIO ROSSI", personPlain.getName());
         Assert.assertEquals("25", personPlain.getAge());
+        Assert.assertEquals(new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(), personPlain.getDateBirth());
     }
 
     @Test
