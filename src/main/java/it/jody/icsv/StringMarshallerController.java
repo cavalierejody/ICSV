@@ -1,8 +1,5 @@
 package it.jody.icsv;
 
-import it.jody.icsv.exceptions.DateFormatException;
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -20,7 +17,7 @@ public class StringMarshallerController {
         addMarshaller(Float.class, new FloatMarshaller());
         addMarshaller(Long.class, new LongMarshaller());
         addMarshaller(Double.class, new DoubleMarshaller());
-        addMarshaller(Date.class, new DateMarshaller());
+        addMarshaller(Date.class, DateMarshaller.of(new SimpleDateFormat("yyyyMMdd")));
     }
 
     public void addMarshaller(Class<?> aClass, StringMarshaller<?> aMarshaller) {
@@ -93,25 +90,6 @@ public class StringMarshallerController {
         @Override
         public Double fromString(String value) {
             return Double.parseDouble(value);
-        }
-    }
-
-    private class DateMarshaller implements StringMarshaller<Date> {
-
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
-
-        @Override
-        public String toString(Date value) {
-            return formatter.format(value);
-        }
-
-        @Override
-        public Date fromString(String value) {
-            try {
-                return formatter.parse(value);
-            } catch (ParseException e) {
-                throw new DateFormatException(e);
-            }
         }
     }
 }
