@@ -13,7 +13,7 @@ import java.util.stream.Stream;
 /**
  * Created by Jody on 20/02/2018.
  */
-public class CSVInvocationHandler implements InvocationHandler {
+public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
 
     private final StringMarshallerController marshallerController = new StringMarshallerController();
 
@@ -37,11 +37,11 @@ public class CSVInvocationHandler implements InvocationHandler {
         }
 
         if ("toCsvString".equals(method.getName())) {
-            return String.join(";", Stream.of(array).map(String::valueOf).collect(Collectors.toList()));
+            return this.toCsvString();
         }
 
         if ("toCsvArray".equals(method.getName())) {
-            return Stream.of(array).map(String::valueOf).toArray();
+            return this.toCsvArray();
         }
 
         // annotation CSVFIeld not found -> call the method itself
@@ -102,6 +102,16 @@ public class CSVInvocationHandler implements InvocationHandler {
     }
 
     private boolean isGetterMethod(Method method) {
-        return ! method.getReturnType().equals(Void.TYPE) && method.getParameterCount() == 0;
+        return !method.getReturnType().equals(Void.TYPE) && method.getParameterCount() == 0;
+    }
+
+    @Override
+    public String toCsvString() {
+        return String.join(";", Stream.of(array).map(String::valueOf).collect(Collectors.toList()));
+    }
+
+    @Override
+    public String[] toCsvArray() {
+        return (String[]) Stream.of(array).map(String::valueOf).toArray();
     }
 }
