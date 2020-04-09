@@ -1,6 +1,7 @@
 package it.jody.test;
 
 import it.jody.icsv.CSVField;
+import it.jody.icsv.CSVFieldMarshaller;
 import it.jody.icsv.StringMarshaller;
 
 import java.util.Date;
@@ -10,7 +11,8 @@ import java.util.Date;
  */
 public interface PersonPlain {
 
-    @CSVField(idx = 0, marshaller = UpperCaseMarshaller.class)
+    @CSVField(idx = 0)
+    @CSVFieldMarshaller(marshaller = UpperCaseMarshaller.class)
     String getName();
 
     @CSVField(idx = 1)

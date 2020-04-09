@@ -59,8 +59,7 @@ public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
             if (returnType.isPrimitive()) {
                 throw new PrimitiveTypeNotSupportedException(method);
             }
-
-            StringMarshaller marshaller = getStringMarshaller(annotation, returnType);
+            StringMarshaller marshaller = getStringMarshaller(method, returnType);
             return marshaller.fromString((String) array[idx]);
         }
 
@@ -73,7 +72,7 @@ public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
                 throw new PrimitiveTypeNotSupportedException(method);
             }
 
-            StringMarshaller marshaller = getStringMarshaller(annotation, parameterType);
+            StringMarshaller marshaller = getStringMarshaller(method, parameterType);
             String value = marshaller.toString(args[0]);
             array[idx] = value;
             return null;
@@ -82,10 +81,12 @@ public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
         throw new IllegalStateException();
     }
 
-    private StringMarshaller getStringMarshaller(CSVField annotation, Class<?> type) throws NoDefaultConstructorFound {
-        Class<? extends StringMarshaller> marshallerClass = annotation.marshaller();
+    private StringMarshaller getStringMarshaller(Method method, Class<?> type) throws NoDefaultConstructorFound {
+        CSVFieldMarshaller annotation = method.getAnnotation(CSVFieldMarshaller.class);
+        Class<? extends StringMarshaller> marshallerClass = annotation == null ? null : annotation.marshaller();
+
         StringMarshaller marshaller;
-        if (marshallerClass.getSuperclass() == null) {
+        if (marshallerClass == null || marshallerClass.getSuperclass() == null) {
             marshaller = marshallerController.getMarshaller(type);
         } else {
             try {
