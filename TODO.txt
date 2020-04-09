@@ -1,3 +1,4 @@
+- clean it.jody.icsv.CSVInvocationHandler.getStringMarshaller
 - better readable exceptions
 - check coverage (Jacoco?)
 - divide integration and unit test in different packages
