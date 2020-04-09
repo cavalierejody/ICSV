@@ -13,7 +13,7 @@ import java.util.Date;
 public interface PersonPlain {
 
     @CSVField(idx = 0)
-    @CSVFieldMarshaller(marshaller = UpperCaseMarshaller.class)
+    @CSVFieldMarshaller(UpperCaseMarshaller.class)
     String getName();
 
     @CSVField(idx = 1)
@@ -23,7 +23,7 @@ public interface PersonPlain {
     Date getDateBirth();
 
     @CSVField(idx = 3)
-    @CSVDateMashaller(dateFormat = "yyyy/MM/dd")
+    @CSVDateMashaller("yyyy/MM/dd")
     Date getDateMarriage();
 
     class UpperCaseMarshaller implements StringMarshaller<String> {

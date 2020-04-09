@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface CSVFieldMarshaller {
-    Class<? extends StringMarshaller> marshaller();
+    Class<? extends StringMarshaller> value();
 }

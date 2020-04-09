@@ -87,14 +87,14 @@ public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
     private StringMarshaller getStringMarshaller(Method method, Class<?> type) throws NoDefaultConstructorFound, InvalidTypeException {
         CSVFieldMarshaller fieldMarshallerAnnotation = method.getAnnotation(CSVFieldMarshaller.class);
         CSVDateMashaller dateMarshallerAnnotation = method.getAnnotation(CSVDateMashaller.class);
-        Class<? extends StringMarshaller> marshallerClass = fieldMarshallerAnnotation == null ? null : fieldMarshallerAnnotation.marshaller();
+        Class<? extends StringMarshaller> marshallerClass = fieldMarshallerAnnotation == null ? null : fieldMarshallerAnnotation.value();
 
         StringMarshaller marshaller;
         if (dateMarshallerAnnotation != null) {
             if (!type.isAssignableFrom(Date.class)) {
                 throw new InvalidTypeException("cannot use @" + CSVDateMashaller.class.getSimpleName() + " with return type of " + type.getName());
             }
-            marshaller = DateMarshaller.of(new SimpleDateFormat(dateMarshallerAnnotation.dateFormat()));
+            marshaller = DateMarshaller.of(new SimpleDateFormat(dateMarshallerAnnotation.value()));
         } else if (marshallerClass == null || marshallerClass.getSuperclass() == null) {
             marshaller = marshallerController.getMarshaller(type);
         } else {
