@@ -1,11 +1,14 @@
 package it.jody.icsv;
 
+import it.jody.icsv.exceptions.InvalidTypeException;
 import it.jody.icsv.exceptions.NoDefaultConstructorFound;
 import it.jody.icsv.exceptions.PrimitiveTypeNotSupportedException;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -81,12 +84,18 @@ public class CSVInvocationHandler implements InvocationHandler, CSVConvertible {
         throw new IllegalStateException();
     }
 
-    private StringMarshaller getStringMarshaller(Method method, Class<?> type) throws NoDefaultConstructorFound {
-        CSVFieldMarshaller annotation = method.getAnnotation(CSVFieldMarshaller.class);
-        Class<? extends StringMarshaller> marshallerClass = annotation == null ? null : annotation.marshaller();
+    private StringMarshaller getStringMarshaller(Method method, Class<?> type) throws NoDefaultConstructorFound, InvalidTypeException {
+        CSVFieldMarshaller fieldMarshallerAnnotation = method.getAnnotation(CSVFieldMarshaller.class);
+        CSVDateMashaller dateMarshallerAnnotation = method.getAnnotation(CSVDateMashaller.class);
+        Class<? extends StringMarshaller> marshallerClass = fieldMarshallerAnnotation == null ? null : fieldMarshallerAnnotation.marshaller();
 
         StringMarshaller marshaller;
-        if (marshallerClass == null || marshallerClass.getSuperclass() == null) {
+        if (dateMarshallerAnnotation != null) {
+            if (!type.isAssignableFrom(Date.class)) {
+                throw new InvalidTypeException("cannot use @" + CSVDateMashaller.class.getSimpleName() + " with return type of " + type.getName());
+            }
+            marshaller = DateMarshaller.of(new SimpleDateFormat(dateMarshallerAnnotation.dateFormat()));
+        } else if (marshallerClass == null || marshallerClass.getSuperclass() == null) {
             marshaller = marshallerController.getMarshaller(type);
         } else {
             try {

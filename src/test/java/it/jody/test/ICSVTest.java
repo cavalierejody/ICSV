@@ -18,12 +18,13 @@ public class ICSVTest {
     @Test
     public void testPlainCSVtoBean() throws MissingMarkerNameException {
 
-        String[] arr = {"Mario Rossi", "25", "20200101"};
+        String[] arr = {"Mario Rossi", "25", "20000101", "2020/05/01"};
         PersonPlain personPlain = new CSVBeanHandler().toBean(PersonPlain.class, arr);
 
         Assert.assertEquals("MARIO ROSSI", personPlain.getName());
         Assert.assertEquals("25", personPlain.getAge());
-        Assert.assertEquals(new GregorianCalendar(2020, Calendar.JANUARY, 1).getTime(), personPlain.getDateBirth());
+        Assert.assertEquals(new GregorianCalendar(2000, Calendar.JANUARY, 1).getTime(), personPlain.getDateBirth());
+        Assert.assertEquals(new GregorianCalendar(2020, Calendar.MAY, 1).getTime(), personPlain.getDateMarriage());
     }
 
     @Test

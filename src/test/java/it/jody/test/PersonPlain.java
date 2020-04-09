@@ -1,5 +1,6 @@
 package it.jody.test;
 
+import it.jody.icsv.CSVDateMashaller;
 import it.jody.icsv.CSVField;
 import it.jody.icsv.CSVFieldMarshaller;
 import it.jody.icsv.StringMarshaller;
@@ -20,6 +21,10 @@ public interface PersonPlain {
 
     @CSVField(idx = 2)
     Date getDateBirth();
+
+    @CSVField(idx = 3)
+    @CSVDateMashaller(dateFormat = "yyyy/MM/dd")
+    Date getDateMarriage();
 
     class UpperCaseMarshaller implements StringMarshaller<String> {
 
